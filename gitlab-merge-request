@@ -19,6 +19,7 @@ end
 
 def find_gitlab_project(namespace, path)
 
+  namespace = namespace.split('/').last
   #look for a group corresponding to namespace
   groups = Gitlab.group_search(namespace)
 
@@ -27,7 +28,7 @@ def find_gitlab_project(namespace, path)
     projects = Gitlab.group_projects(groups[0].id, {per_page: 1000})
   else
     #fallback: looking for projects with corresponding namespace
-    projects = Gitlab.projects({'search': namespace})
+    projects = Gitlab.projects({'search'=> namespace})
 
     if not projects.any?
       raise sprintf("Unable find project with namespace '%s' and path '%s'", namespace, path)
@@ -60,10 +61,18 @@ def format_url(*args)
   "#{GITLAB_BASE_URL}/#{args.join '/'}"
 end
 
+branch_to_merge = ARGV[0]
+
+if branch_to_merge == nil
+  raise sprintf("You need to specify branch you intend to merge into")
+end
+
 current_branch = @git.branches.find(&:current).name
 project = cwd_gitlab_project
 
+puts 'Create merge request: ' + current_branch + " => " + branch_to_merge
+
 merge_request =  Gitlab.create_merge_request project.id, write_merge_request_message,
-  :source_branch => current_branch, :target_branch => project.default_branch
+  :source_branch => current_branch, :target_branch => v1 = branch_to_merge
 
 puts format_url project.path_with_namespace, 'merge_requests' , merge_request.iid
