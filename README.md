@@ -9,7 +9,7 @@ After creation, outputs a clickable URL to open it in browser.
 ## setup
 
 ```sh
-$ curl https://raw.githubusercontent.com/raine/gitlab-merge-request/master/gitlab-merge-request > ~/bin
+$ curl https://raw.githubusercontent.com/eldae/gitlab-merge-request/master/gitlab-merge-request > ~/bin/gitlab-merge-request
 $ chmod +x ~/bin/gitlab-merge-request
 $ gem install git gitlab
 $ export GITLAB_API_ENDPOINT=https://gitlab.yourcompany.com/api/v3
